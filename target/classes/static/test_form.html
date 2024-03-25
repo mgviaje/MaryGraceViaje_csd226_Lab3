@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<form hx-post="/test_form" hx-target="this" hx-swap="outerHTML">
+    <div>
+            <label>First Name</label>
+            <input type="text" name="firstname" value="Joe">
+        </div>
+    <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="lastname" value="Blow">
+        </div>
+    <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" value="joe@blow.com">
+        </div>
+    <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" value="xxxxx">
+        </div>
+    <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirmPassword" value="xxxxx">
+        </div>
+    <button class="btn">Submit</button>
+    <button class="btn" hx-get="/test_form.html">Cancel</button>
+    </form>
+
+</body>
+</html>
