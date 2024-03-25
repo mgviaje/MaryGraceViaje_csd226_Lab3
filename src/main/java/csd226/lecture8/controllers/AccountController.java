@@ -74,11 +74,11 @@ public class AccountController {
                 "<h1>Sign in</h1>" +
                 "    <div class=\"form-group\">" +
                 "        <label>Username (your email)</label>" +
-                "        <input type=\"email\" name=\"email\" value=\"grace@gmail.com\">" +
+                "        <input type=\"email\" name=\"email\" value=\"fred.carella@gmail.com\">" +
                 "    </div>" +
                 "    <div class=\"form-group\">" +
                 "        <label>Password</label>" +
-                "        <input type=\"password\" name=\"password\" value=\"gracespassword\">" +
+                "        <input type=\"password\" name=\"password\" value=\"fredspassword\">" +
                 "    </div>" +
                 "    <button class=\"btn\">Submit</button>" +
                 "    <button class=\"btn\" hx-get=\"/signin\">Cancel</button>" +
@@ -96,23 +96,23 @@ public class AccountController {
                 "<h1>Create an Account</h1>" +
                 "    <div>" +
                 "        <label>First Name</label>" +
-                "        <input type=\"text\" name=\"firstname\" value=\"Grace\">" +
+                "        <input type=\"text\" name=\"firstname\" value=\"Fred\">" +
                 "    </div>" +
                 "    <div class=\"form-group\">" +
                 "        <label>Last Name</label>" +
-                "        <input type=\"text\" name=\"lastname\" value=\"Viaje\">" +
+                "        <input type=\"text\" name=\"lastname\" value=\"Carella\">" +
                 "    </div>" +
                 "    <div class=\"form-group\">" +
                 "        <label>Email Address</label>" +
-                "        <input type=\"email\" name=\"email\" value=\"grace@gmail.com\">" +
+                "        <input type=\"email\" name=\"email\" value=\"fred.carella@gmail.com\">" +
                 "    </div>" +
                 "    <div class=\"form-group\">" +
                 "        <label>Password</label>" +
-                "        <input type=\"password\" name=\"password\" value=\"gracepassword\">" +
+                "        <input type=\"password\" name=\"password\" value=\"fredspassword\">" +
                 "    </div>" +
                 "    <div class=\"form-group\">" +
                 "        <label>Confirm Password</label>" +
-                "        <input type=\"password\" name=\"confirmPassword\" value=\"gracepassword\">" +
+                "        <input type=\"password\" name=\"confirmPassword\" value=\"fredspassword\">" +
                 "    </div>" +
                 "    <button class=\"btn\">Submit</button>" +
                 "    <button class=\"btn\" hx-get=\"/signin\">Cancel</button>" +
