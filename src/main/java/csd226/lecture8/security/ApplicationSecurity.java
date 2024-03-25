@@ -44,7 +44,7 @@ public class ApplicationSecurity {
         http.csrf().disable();
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/greeting","unProtectedPage","/test_form.html","/test_form","/auth/login",  "/signup", "/", "index.html", "/about").permitAll()
+                        .requestMatchers("/greeting","unProtectedPage","/test_form.html","/test_form","/auth/login",  "/signup", "/", "index.html", "/about", "/admin", "/staff").permitAll()
                         .requestMatchers(HttpMethod.POST, "/createAccount").permitAll()
                         .requestMatchers(HttpMethod.GET, "/publiccontent").permitAll()
                         .requestMatchers(HttpMethod.POST, "/publiccontent").authenticated()
