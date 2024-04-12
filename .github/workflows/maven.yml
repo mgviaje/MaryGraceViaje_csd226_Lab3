@@ -29,6 +29,17 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: clean install
+    - name: Build and push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: <9bfa489348b99f418aeb6e5965ff32a4b6913c6683bf5db27fa55abe55e30678/mgiviaje>/<intranet>
+        tags: latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
