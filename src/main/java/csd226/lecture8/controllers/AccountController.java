@@ -2,6 +2,7 @@ package csd226.lecture8.controllers;
 
 import csd226.lecture8.data.Account;
 import csd226.lecture8.repositories.AccountRepository;
+import csd226.lecture8.repositories.NoteRepository;
 import csd226.lecture8.security.JwtTokenUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,6 +37,10 @@ public class AccountController {
 
     private final AccessToken token;
 
+    @Autowired
+    private NoteRepository noteRepository; // Add this line
+
+
     public AccountController(AccessToken accessToken) {
         this.token = accessToken;
     }
@@ -45,6 +51,19 @@ public class AccountController {
 //        model.addAttribute("email", account);
 //        return "result";
 //    }
+
+    @GetMapping("/notes")
+    public ResponseEntity<List<Note>> getAllNotes() {
+        List<Note> notes = noteRepository.findAll();
+        return ResponseEntity.ok(notes);
+    }
+
+    @PutMapping("/notes")
+    public ResponseEntity<Note> createOrUpdateNote(@RequestBody Note note) {
+        Note savedNote = noteRepository.save(note);
+        return ResponseEntity.ok(savedNote);
+    }
+
     @PostMapping(path="/auth/login")
     public ResponseEntity<?> login(@ModelAttribute Account acc, Model model) {
         try {

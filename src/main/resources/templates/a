@@ -1,0 +1,48 @@
+    <script>
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+        var accessToken = localStorage.getItem("accessToken");
+        if (accessToken) {
+        evt.detail.headers["Authorization"] = "Bearer " + accessToken;
+    }
+    });
+
+        function handleResponse(response) {
+        // Handle response based on success or error
+        console.log(response);
+    }
+
+        function makeRequest(url, method, data) {
+        axios({
+            method: method,
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            },
+            data: data
+        }).then(function (response) {
+            handleResponse(response);
+        }).catch(function (error) {
+            if (error.response.status === 401) { // Unauthorized error, token expired
+                refreshToken(); // Refresh token and retry the request
+            } else {
+                console.error(error);
+            }
+        });
+    }
+
+        function refreshToken() {
+        var refreshToken = localStorage.getItem('refreshToken');
+        axios.post('/auth/refreshtoken', {refreshToken: refreshToken})
+        .then(function(response) {
+        var newAccessToken = response.data.accessToken;
+        localStorage.setItem('accessToken', newAccessToken);
+        // Retry the failed request with the new access token
+        var failedRequest = JSON.parse(localStorage.getItem('failedRequest'));
+        makeRequest(failedRequest.url, failedRequest.method, failedRequest.data);
+    }).catch(function(error) {
+        console.error(error);
+    });
+    }
+
+</script>
