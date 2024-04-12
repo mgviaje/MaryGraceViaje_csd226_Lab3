@@ -113,42 +113,90 @@
 <footer class="container-fluid text-center">
     <p>Footer Text</p>
 </footer>
+
+
+<!--<script>-->
+<!--    document.body.addEventListener('htmx:configRequest', function (evt) {-->
+<!--        var accessToken = localStorage.getItem("accessToken");-->
+<!--        var refreshToken = localStorage.getItem("refreshToken");-->
+<!--        evt.detail.headers["Authorization"] = "Bearer " + accessToken + " " + refreshToken;-->
+<!--    });-->
+
+<!--    function getAbout() {-->
+<!--        htmx.ajax('GET', '/protectedPage', {target: '#home'});-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    document.body.addEventListener('htmx:configRequest', function (evt) {-->
+<!--        // evt.detail.parameters['auth_token'] = "getAuthToken() parameter"; // add a new parameter into the request-->
+<!--        alert(accessToken)-->
+<!--        evt.detail.headers["Authorization"] = "Bearer " + accessToken; // add a new header into the request-->
+<!--    });-->
+
+<!--    function getString() {-->
+<!--        //'{"Authorization" : +"Bearer th:text="${token}""}'-->
+<!--        alert("{\"String\":\"this is a string\"}");-->
+<!--        return "{\"String\":\"this is a string\"}";-->
+<!--    }-->
+
+<!--    localStorage.setItem("header", "{'Authorization' : 'Bearer this is the token'}");-->
+<!--    string = "Bearer th:text=\"${token}\"";-->
+<!--    localStorage.setItem("accessToken", string);-->
+
+<!--    //-->
+<!--    // axios.get('/about', {-->
+<!--    //     params: {-->
+<!--    //         ID: 12345-->
+<!--    //     }-->
+<!--    // })-->
+<!--    //     .then(function (response) {-->
+<!--    //         console.log(response);-->
+<!--    //     })-->
+<!--    //     .catch(function (error) {-->
+<!--    //         console.log(error);-->
+<!--    //     })-->
+<!--    //     .finally(function () {-->
+<!--    //         // always executed-->
+<!--    //     });-->
+<!--    //-->
+
+<!--    function getAbout() {-->
+<!--        htmx.ajax('GET', '/protectedPage', {target: '#home', headers: 'This is a header'});-->
+<!--    }-->
+
+<!--    </script>-->
+
 <script>
-    document.body.addEventListener('htmx:configRequest', function(evt) {
-        // evt.detail.parameters['auth_token'] = "getAuthToken() parameter"; // add a new parameter into the request
-         alert(accessToken)
-        evt.detail.headers["Authorization"] = "Bearer "+accessToken; // add a new header into the request
+    document.body.addEventListener('htmx:configRequest', function (evt) {
+        var accessToken = localStorage.getItem("accessToken");
+        var refreshToken = localStorage.getItem("refreshToken");
+        evt.detail.headers["Authorization"] = "Bearer " + accessToken + " " + refreshToken;
     });
-    function getString(){
-//'{"Authorization" : +"Bearer th:text="${token}""}'
-        alert("{\"String\":\"this is a string\"}");
-        return "{\"String\":\"this is a string\"}";
-    }
-    localStorage.setItem("header", "{'Authorization' : 'Bearer this is the token'}");
-    string="Bearer th:text=\"${token}\"";
-    localStorage.setItem("accessToken", string);
 
-    //
-    // axios.get('/about', {
-    //     params: {
-    //         ID: 12345
-    //     }
-    // })
-    //     .then(function (response) {
-    //         console.log(response);
-    //     })
-    //     .catch(function (error) {
-    //         console.log(error);
-    //     })
-    //     .finally(function () {
-    //         // always executed
-    //     });
-    //
+    function login() {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
 
-    function getAbout(){
-        htmx.ajax('GET', '/protectedPage', {target: '#home', headers: 'This is a header'});
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/auth/login", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    localStorage.setItem("accessToken", response.accessToken);
+                    localStorage.setItem("refreshToken", response.refreshToken);
+                } else {
+                    alert("Login failed");
+                }
+            }
+        };
+        xhr.send(JSON.stringify({ email: email, password: password }));
     }
 </script>
 
-</body>
-</html>
+
+
+    </body>
+    </html>

@@ -4,6 +4,7 @@ import csd226.lecture8.data.RefreshToken;
 import csd226.lecture8.repositories.AccountRepository;
 import csd226.lecture8.repositories.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -19,6 +20,16 @@ public class RefreshTokenUtil {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    AuthenticationManager authManager;
+
+    @Autowired
+    JwtTokenUtil jwtUtil;
+
+    @Autowired
+    RefreshTokenUtil refreshTokenUtil;
+
 
     public RefreshToken findByToken(String token) {
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByToken(token);
@@ -49,3 +60,5 @@ public class RefreshTokenUtil {
         return refreshTokenRepository.deleteByAccount(accountRepository.findById(accountId).get());
     }
 }
+
+

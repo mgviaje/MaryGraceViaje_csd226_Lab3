@@ -77,7 +77,7 @@ export class ApiService {
     }
 
     async refreshToken() {
-        return axios.post("/auth/refreshtoken", {
+        return axios.post("https://mgracewebapp.azurewebsites.net/", {
             refreshToken: this.getRefreshToken(),
         });
     }

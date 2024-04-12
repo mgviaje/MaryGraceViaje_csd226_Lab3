@@ -2,8 +2,8 @@ package csd226.lecture8.controllers;
 
 import csd226.lecture8.data.Account;
 import csd226.lecture8.repositories.AccountRepository;
+import csd226.lecture8.repositories.NoteRepository;
 import csd226.lecture8.security.JwtTokenUtil;
-import csd226.lecture8.security.RefreshTokenUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import csd226.lecture8.data.AuthResponse;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -35,10 +35,10 @@ public class AccountController {
     @Autowired
     JwtTokenUtil jwtUtil;
 
-    @Autowired
-    RefreshTokenUtil refreshTokenUtil;
-
     private final AccessToken token;
+
+    @Autowired
+    private NoteRepository noteRepository; // Add this line
 
 
     public AccountController(AccessToken accessToken) {
@@ -52,128 +52,39 @@ public class AccountController {
 //        return "result";
 //    }
 
+    @GetMapping("/notes")
+    public ResponseEntity<List<Note>> getAllNotes() {
+        List<Note> notes = noteRepository.findAll();
+        return ResponseEntity.ok(notes);
+    }
 
-
-// this is the one working
-//    @PostMapping(path="/auth/login")
-//    public ResponseEntity<?> login(@ModelAttribute Account acc, Model model) {
-//        String refreshToken = "your_refresh_token_value_here";
-//
-//        try {
-//            Authentication authentication = authManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            acc.getEmail(), acc.getPassword())
-//            );
-//
-//            Account account = (Account) authentication.getPrincipal();
-//            String accessToken = jwtUtil.generateAccessToken(account);
-//            System.out.println("AccessToken: "+accessToken);
-////            model.addAttribute("token", accessToken);
-//            token.setAccessToken(accessToken);
-//
-//            // AuthResponse response = new AuthResponse(account.getEmail(), accessToken);
-//            AuthResponse response = new AuthResponse(account.getEmail(), accessToken, refreshToken);
-//
-//            return ResponseEntity.ok().body(response+"<script>alert('setting var \"accessToken\"');var accessToken='"+accessToken+"'</script>");
-//
-//        } catch( Exception ex) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//    }
-
-
-
-
-// this is sir freds code
-//
-//    @PostMapping(path="/auth/login")
-//    public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
-//        // String refreshToken = "your_refresh_token_value_here";
-//
-//        try {
-//            Authentication authentication = authManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            acc.getEmail(), acc.getPassword())
-//            );
-//
-//            Account account = (Account) authentication.getPrincipal();
-//            String accessToken = jwtUtil.generateAccessToken(account);
-//            RefreshToken refreshToken = refreshTokenUtil.createRefreshToken(account.getId());
-//
-//
-//            System.out.println("AccessToken: "+accessToken);
-////            model.addAttribute("token", accessToken);
-//            token.setAccessToken(accessToken);
-//
-//            // AuthResponse response = new AuthResponse(account.getEmail(), accessToken);
-//            // AuthResponse response = new AuthResponse(account.getEmail(), accessToken, refreshToken);
-//            AuthResponse response = new AuthResponse(account.getEmail(), accessToken, refreshToken.getToken());
-//            return ResponseEntity.ok().body(response);
-//
-//
-//
-//
-//            //return ResponseEntity.ok().body(response+"<script>alert('setting var \"accessToken\"');var accessToken='"+accessToken+"'</script>");
-//
-//        } catch( Exception ex) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//    }
-
-
-    // this is generated from GPT to fix errors
+    @PutMapping("/notes")
+    public ResponseEntity<Note> createOrUpdateNote(@RequestBody Note note) {
+        Note savedNote = noteRepository.save(note);
+        return ResponseEntity.ok(savedNote);
+    }
 
     @PostMapping(path="/auth/login")
-    public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<?> login(@ModelAttribute Account acc, Model model) {
         try {
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail(), request.getPassword())
+                            acc.getEmail(), acc.getPassword())
             );
 
             Account account = (Account) authentication.getPrincipal();
             String accessToken = jwtUtil.generateAccessToken(account);
-            // Assuming refreshTokenUtil is a valid utility class
-            RefreshToken refreshToken = refreshTokenUtil.createRefreshToken(account.getId());
-
             System.out.println("AccessToken: "+accessToken);
+//            model.addAttribute("token", accessToken);
             token.setAccessToken(accessToken);
 
-            AuthResponse response = new AuthResponse(account.getEmail(), accessToken, refreshToken.getToken());
-            return ResponseEntity.ok().body(response);
+            AuthResponse response = new AuthResponse(account.getEmail(), accessToken);
+            return ResponseEntity.ok().body(response+"<script>alert('setting var \"accessToken\"');var accessToken='"+accessToken+"'</script>");
 
         } catch( Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
-
-
-    // this is sir freds code
-
-    @PostMapping("/auth/refreshtoken")
-    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
-        String requestRefreshToken = request.getRefreshToken();
-
-        try {
-            RefreshToken refreshToken = refreshTokenUtil.findByToken(requestRefreshToken);
-
-            if (refreshToken != null) {
-                if (refreshTokenUtil.verifyExpiration(refreshToken)) {
-                    Account account = accountRepository.getById(refreshToken.getAccount().getId());
-                    String token = jwtUtil.generateAccessToken(account);
-                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
-                } else {
-                    throw new Exception("RefreshTokenExpired");
-                }
-            }
-        } catch(Exception ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
 
     @GetMapping("/signin")
     public ResponseEntity<String> getSignin(){ // map a URL to a method
